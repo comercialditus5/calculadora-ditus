@@ -8,9 +8,8 @@ export const Header: React.FC = () => {
           <img 
             src="/logotipo-ditus-marketing.png" 
             alt="Ditus Marketing" 
-            className="h-8 md:h-10 mr-3"
+            className="h-8 md:h-10"
           />
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Ditus Marketing</h1>
         </div>
         <div className="text-center md:text-right">
           <h2 className="text-xl md:text-2xl font-semibold text-white">Calculadora de Preços</h2>
