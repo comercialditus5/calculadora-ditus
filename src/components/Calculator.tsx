@@ -100,8 +100,8 @@ export const Calculator: React.FC = () => {
         
         {/* Right Column - Summary and Options */}
         <div className="md:col-span-1">
-          {/* Summary - Fixed at top */}
-          <div className="sticky top-20 z-40">
+          {/* Summary - Sticky at top */}
+          <div className="sticky top-20 z-40 mb-6">
             <Summary 
               selectedServices={selectedServices} 
               paymentMethod={paymentMethod}
@@ -112,27 +112,24 @@ export const Calculator: React.FC = () => {
             />
           </div>
           
-          {/* Static Options - These will scroll normally and stay below Summary */}
-          <div className="mt-6">
-            {/* Payment Options - Static */}
-            <div className="mb-6">
-              <PaymentOptions 
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
+          {/* Payment Options - Sticky below Summary */}
+          <div className="sticky top-[420px] z-30 mb-6">
+            <PaymentOptions 
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+            />
+          </div>
+          
+          {/* Recurring Payment Options - Sticky below Payment Options */}
+          {hasRecurringServices && (
+            <div className="sticky top-[620px] z-20">
+              <RecurringPaymentOptions
+                recurringPayment={recurringPayment}
+                setRecurringPayment={setRecurringPayment}
+                hasRecurringServices={hasRecurringServices}
               />
             </div>
-            
-            {/* Recurring Payment Options - Static */}
-            {hasRecurringServices && (
-              <div>
-                <RecurringPaymentOptions
-                  recurringPayment={recurringPayment}
-                  setRecurringPayment={setRecurringPayment}
-                  hasRecurringServices={hasRecurringServices}
-                />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
