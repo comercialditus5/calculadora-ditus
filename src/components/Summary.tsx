@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { SelectedService, PaymentMethod, ClientInfo, RecurringPayment, TransportInfo } from '../types';
-import { calculateTotals, calculateFees, calculateInstallmentValue } from '../utils/calculations';
+import { calculateTotals, calculateFees, calculateInstallmentValue, getCreditFeePercentage } from '../utils/calculations';
 
 interface SummaryProps {
   selectedServices: SelectedService[];
@@ -9,6 +9,9 @@ interface SummaryProps {
   clientInfo: ClientInfo;
   recurringPayment: RecurringPayment;
   transport: TransportInfo;
+  hasRecurringServices: boolean;
+  setPaymentMethod: React.Dispatch<React.SetStateAction<PaymentMethod>>;
+  setRecurringPayment: React.Dispatch<React.SetStateAction<RecurringPayment>>;
   showBudgetDetails: () => void;
 }
 
@@ -16,6 +19,10 @@ export const Summary: React.FC<SummaryProps> = ({
   selectedServices,
   paymentMethod,
   transport,
+  hasRecurringServices,
+  setPaymentMethod,
+  setRecurringPayment,
+  recurringPayment,
   showBudgetDetails
 }) => {
   const [totals, setTotals] = useState({
@@ -40,6 +47,20 @@ export const Summary: React.FC<SummaryProps> = ({
       installmentValue: installmentValue
     });
   }, [selectedServices, paymentMethod, transport]);
+
+  const handlePaymentTypeChange = (type: 'pix' | 'credit') => {
+    setPaymentMethod({
+      type,
+      installments: type === 'credit' ? 1 : 1
+    });
+  };
+
+  const handleInstallmentsChange = (installments: number) => {
+    setPaymentMethod({
+      ...paymentMethod,
+      installments
+    });
+  };
 
   return (
     <div className="bg-gradient-to-br from-[#3a0d44] to-[#1a0c20] rounded-lg shadow-lg p-6">
@@ -85,6 +106,126 @@ export const Summary: React.FC<SummaryProps> = ({
                 <span className="text-white font-medium">
                   R$ {(transport.cost * transport.days).toLocaleString('pt-BR', {minimumFractionDigits: 2})}
                 </span>
+              </div>
+            )}
+          </div>
+          
+          {/* Payment Options Section */}
+          <div className="border-t border-white/10 pt-4 mb-6">
+            <h4 className="text-lg font-semibold mb-3 text-white">Opções de Pagamento</h4>
+            
+            <div className="mb-4">
+              <div className="text-sm text-white/80 mb-2">Valores únicos e entradas:</div>
+              
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <button
+                  className={`py-2 rounded text-sm font-medium transition-all ${
+                    paymentMethod.type === 'pix'
+                      ? 'bg-[#5C005C] text-white'
+                      : 'bg-gray-800/50 text-white/70 hover:bg-gray-800'
+                  }`}
+                  onClick={() => handlePaymentTypeChange('pix')}
+                >
+                  Pix (sem juros)
+                </button>
+                
+                <button
+                  className={`py-2 rounded text-sm font-medium transition-all ${
+                    paymentMethod.type === 'credit'
+                      ? 'bg-[#5C005C] text-white'
+                      : 'bg-gray-800/50 text-white/70 hover:bg-gray-800'
+                  }`}
+                  onClick={() => handlePaymentTypeChange('credit')}
+                >
+                  Cartão de Crédito
+                </button>
+              </div>
+              
+              {paymentMethod.type === 'credit' && (
+                <div className="mb-4">
+                  <div className="text-sm text-white/80 mb-2">Parcelas:</div>
+                  
+                  <div className="grid grid-cols-4 gap-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(i => (
+                      <button
+                        key={i}
+                        className={`py-1.5 rounded text-sm font-medium transition-all ${
+                          paymentMethod.installments === i
+                            ? 'bg-[#5C005C] text-white'
+                            : 'bg-gray-800/50 text-white/70 hover:bg-gray-800'
+                        }`}
+                        onClick={() => handleInstallmentsChange(i)}
+                      >
+                        {i}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="mb-4">
+              <div className="text-sm text-white/80 mb-2">Pagamentos recorrentes (sem juros):</div>
+              <div className="bg-gray-800/30 rounded p-3 text-sm text-white/70">
+                <p>Escolha entre: boleto/pix, cartão de débito ou crédito.</p>
+                <p>Vencimentos disponíveis: dias 05, 10, 15, 20 ou 25.</p>
+              </div>
+            </div>
+
+            {/* Recurring Payment Options */}
+            {hasRecurringServices && (
+              <div className="border-t border-white/10 pt-4 mb-4">
+                <h5 className="text-md font-semibold mb-3 text-white">Pagamentos Mensais Recorrentes</h5>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Forma de Pagamento
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(['pix', 'boleto', 'credit'] as const).map((method) => (
+                        <button
+                          key={method}
+                          className={`py-2 px-3 rounded text-sm font-medium transition-all ${
+                            recurringPayment.method === method
+                              ? 'bg-[#5C005C] text-white'
+                              : 'bg-gray-800/50 text-white/70 hover:bg-gray-800'
+                          }`}
+                          onClick={() => setRecurringPayment(prev => ({ ...prev, method }))}
+                        >
+                          {method === 'pix' ? 'PIX' : 
+                           method === 'boleto' ? 'Boleto' : 
+                           'Cartão'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Dia de Vencimento
+                    </label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {[5, 10, 15, 20, 25].map((day) => (
+                        <button
+                          key={day}
+                          className={`py-2 px-3 rounded text-sm font-medium transition-all ${
+                            recurringPayment.dueDate === day
+                              ? 'bg-[#5C005C] text-white'
+                              : 'bg-gray-800/50 text-white/70 hover:bg-gray-800'
+                          }`}
+                          onClick={() => setRecurringPayment(prev => ({ ...prev, dueDate: day as 5 | 10 | 15 | 20 | 25 }))}
+                        >
+                          Dia {day}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="mt-3 text-sm text-white/60">
+                  Pagamentos mensais não têm acréscimo de juros
+                </p>
               </div>
             )}
           </div>

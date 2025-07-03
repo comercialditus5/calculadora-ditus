@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { ServiceSection } from './ServiceSection';
 import { Summary } from './Summary';
 import { BudgetDetails } from './BudgetDetails';
-import { PaymentOptions } from './PaymentOptions';
-import { RecurringPaymentOptions } from './RecurringPaymentOptions';
 import { ClientInfoForm } from './ClientInfoForm';
 import { TransportCalculator } from './TransportCalculator';
 import { servicesData } from '../data/servicesData';
@@ -98,38 +96,21 @@ export const Calculator: React.FC = () => {
           )}
         </div>
         
-        {/* Right Column - Summary and Options */}
+        {/* Right Column - Summary with integrated Payment Options */}
         <div className="md:col-span-1">
-          {/* Summary - Sticky at top */}
-          <div className="sticky top-20 z-40 mb-6">
+          <div className="sticky top-20 z-40">
             <Summary 
               selectedServices={selectedServices} 
               paymentMethod={paymentMethod}
               clientInfo={clientInfo}
               recurringPayment={recurringPayment}
               transport={transport}
+              hasRecurringServices={hasRecurringServices}
+              setPaymentMethod={setPaymentMethod}
+              setRecurringPayment={setRecurringPayment}
               showBudgetDetails={() => setShowBudgetDetails(true)}
             />
           </div>
-          
-          {/* Payment Options - Sticky below Summary */}
-          <div className="sticky top-[420px] z-30 mb-6">
-            <PaymentOptions 
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-            />
-          </div>
-          
-          {/* Recurring Payment Options - Sticky below Payment Options */}
-          {hasRecurringServices && (
-            <div className="sticky top-[620px] z-20">
-              <RecurringPaymentOptions
-                recurringPayment={recurringPayment}
-                setRecurringPayment={setRecurringPayment}
-                hasRecurringServices={hasRecurringServices}
-              />
-            </div>
-          )}
         </div>
       </div>
 
