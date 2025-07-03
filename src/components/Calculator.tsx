@@ -97,39 +97,37 @@ export const Calculator: React.FC = () => {
           )}
         </div>
         
-        <div className="md:col-span-1">
-          <div className="space-y-6">
-            {/* Summary */}
-            <div className="sticky top-20 z-40">
-              <Summary 
-                selectedServices={selectedServices} 
-                paymentMethod={paymentMethod}
-                clientInfo={clientInfo}
-                recurringPayment={recurringPayment}
-                transport={transport}
-                showBudgetDetails={() => setShowBudgetDetails(true)}
-              />
-            </div>
-            
-            {/* Payment Options */}
-            <div className="sticky top-[420px] z-30">
-              <PaymentOptions 
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
-              />
-            </div>
-            
-            {/* Recurring Payment Options */}
-            {hasRecurringServices && (
-              <div className="sticky top-[720px] z-20">
-                <RecurringPaymentOptions
-                  recurringPayment={recurringPayment}
-                  setRecurringPayment={setRecurringPayment}
-                  hasRecurringServices={hasRecurringServices}
-                />
-              </div>
-            )}
+        <div className="md:col-span-1 relative">
+          {/* Summary - Fixed at top */}
+          <div className="sticky top-20 z-40 mb-6">
+            <Summary 
+              selectedServices={selectedServices} 
+              paymentMethod={paymentMethod}
+              clientInfo={clientInfo}
+              recurringPayment={recurringPayment}
+              transport={transport}
+              showBudgetDetails={() => setShowBudgetDetails(true)}
+            />
           </div>
+          
+          {/* Payment Options - Static below Summary */}
+          <div className="mb-6">
+            <PaymentOptions 
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+            />
+          </div>
+          
+          {/* Recurring Payment Options - Static below Payment Options */}
+          {hasRecurringServices && (
+            <div>
+              <RecurringPaymentOptions
+                recurringPayment={recurringPayment}
+                setRecurringPayment={setRecurringPayment}
+                hasRecurringServices={hasRecurringServices}
+              />
+            </div>
+          )}
         </div>
       </div>
 
