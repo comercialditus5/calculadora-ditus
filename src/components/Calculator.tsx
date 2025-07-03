@@ -70,6 +70,7 @@ export const Calculator: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Left Column - Services */}
         <div className="md:col-span-2 space-y-6">
           {/* Service Sections */}
           {servicesData.map((category) => (
@@ -97,9 +98,10 @@ export const Calculator: React.FC = () => {
           )}
         </div>
         
+        {/* Right Column - Summary and Options */}
         <div className="md:col-span-1">
-          {/* Summary - Sticky at top */}
-          <div className="sticky top-20 z-40 mb-6">
+          {/* Summary - Fixed at top */}
+          <div className="sticky top-20 z-40">
             <Summary 
               selectedServices={selectedServices} 
               paymentMethod={paymentMethod}
@@ -110,21 +112,25 @@ export const Calculator: React.FC = () => {
             />
           </div>
           
-          {/* Static content below - this will scroll normally */}
-          <div className="space-y-6">
-            {/* Payment Options - Completely static */}
-            <PaymentOptions 
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-            />
-            
-            {/* Recurring Payment Options - Completely static */}
-            {hasRecurringServices && (
-              <RecurringPaymentOptions
-                recurringPayment={recurringPayment}
-                setRecurringPayment={setRecurringPayment}
-                hasRecurringServices={hasRecurringServices}
+          {/* Static Options - These will scroll normally and stay below Summary */}
+          <div className="mt-6">
+            {/* Payment Options - Static */}
+            <div className="mb-6">
+              <PaymentOptions 
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
               />
+            </div>
+            
+            {/* Recurring Payment Options - Static */}
+            {hasRecurringServices && (
+              <div>
+                <RecurringPaymentOptions
+                  recurringPayment={recurringPayment}
+                  setRecurringPayment={setRecurringPayment}
+                  hasRecurringServices={hasRecurringServices}
+                />
+              </div>
             )}
           </div>
         </div>
