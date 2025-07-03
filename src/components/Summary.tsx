@@ -42,7 +42,7 @@ export const Summary: React.FC<SummaryProps> = ({
   }, [selectedServices, paymentMethod, transport]);
 
   return (
-    <div className="bg-gradient-to-br from-[#3a0d44] to-[#1a0c20] rounded-lg shadow-lg p-6">
+    <div className="bg-gradient-to-br from-[#3a0d44] to-[#1a0c20] rounded-lg shadow-lg p-6 sticky top-20 z-40">
       <h3 className="text-xl font-semibold mb-4 text-white">Resumo do Orçamento</h3>
       
       {selectedServices.length === 0 ? (

@@ -98,7 +98,7 @@ export const Calculator: React.FC = () => {
         </div>
         
         <div className="md:col-span-1">
-          <div className="sticky top-4 space-y-6">
+          <div className="space-y-6">
             {/* Summary */}
             <Summary 
               selectedServices={selectedServices} 
