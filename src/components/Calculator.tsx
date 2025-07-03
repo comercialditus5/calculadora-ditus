@@ -97,8 +97,8 @@ export const Calculator: React.FC = () => {
           )}
         </div>
         
-        <div className="md:col-span-1 relative">
-          {/* Summary - Fixed at top */}
+        <div className="md:col-span-1">
+          {/* Summary - Sticky at top */}
           <div className="sticky top-20 z-40 mb-6">
             <Summary 
               selectedServices={selectedServices} 
@@ -110,24 +110,23 @@ export const Calculator: React.FC = () => {
             />
           </div>
           
-          {/* Payment Options - Static below Summary */}
-          <div className="mb-6">
+          {/* Static content below - this will scroll normally */}
+          <div className="space-y-6">
+            {/* Payment Options - Completely static */}
             <PaymentOptions 
               paymentMethod={paymentMethod}
               setPaymentMethod={setPaymentMethod}
             />
-          </div>
-          
-          {/* Recurring Payment Options - Static below Payment Options */}
-          {hasRecurringServices && (
-            <div>
+            
+            {/* Recurring Payment Options - Completely static */}
+            {hasRecurringServices && (
               <RecurringPaymentOptions
                 recurringPayment={recurringPayment}
                 setRecurringPayment={setRecurringPayment}
                 hasRecurringServices={hasRecurringServices}
               />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
