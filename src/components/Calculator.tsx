@@ -100,28 +100,34 @@ export const Calculator: React.FC = () => {
         <div className="md:col-span-1">
           <div className="space-y-6">
             {/* Summary */}
-            <Summary 
-              selectedServices={selectedServices} 
-              paymentMethod={paymentMethod}
-              clientInfo={clientInfo}
-              recurringPayment={recurringPayment}
-              transport={transport}
-              showBudgetDetails={() => setShowBudgetDetails(true)}
-            />
+            <div className="sticky top-20 z-40">
+              <Summary 
+                selectedServices={selectedServices} 
+                paymentMethod={paymentMethod}
+                clientInfo={clientInfo}
+                recurringPayment={recurringPayment}
+                transport={transport}
+                showBudgetDetails={() => setShowBudgetDetails(true)}
+              />
+            </div>
             
             {/* Payment Options */}
-            <PaymentOptions 
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-            />
+            <div className="sticky top-[420px] z-30">
+              <PaymentOptions 
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+              />
+            </div>
             
             {/* Recurring Payment Options */}
             {hasRecurringServices && (
-              <RecurringPaymentOptions
-                recurringPayment={recurringPayment}
-                setRecurringPayment={setRecurringPayment}
-                hasRecurringServices={hasRecurringServices}
-              />
+              <div className="sticky top-[720px] z-20">
+                <RecurringPaymentOptions
+                  recurringPayment={recurringPayment}
+                  setRecurringPayment={setRecurringPayment}
+                  hasRecurringServices={hasRecurringServices}
+                />
+              </div>
             )}
           </div>
         </div>

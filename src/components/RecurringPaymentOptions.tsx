@@ -15,7 +15,7 @@ export const RecurringPaymentOptions: React.FC<RecurringPaymentOptionsProps> = (
   if (!hasRecurringServices) return null;
 
   return (
-    <div className="mt-6 border-t border-gray-700/50 pt-6 sticky top-20 z-40">
+    <div className="bg-gradient-to-br from-[#2a1333] to-[#1a0c20] rounded-lg shadow-lg p-6">
       <h4 className="text-lg font-semibold mb-4 text-white">Pagamentos Mensais Recorrentes</h4>
       
       <div className="space-y-4">

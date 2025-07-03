@@ -26,7 +26,7 @@ export const PaymentOptions: React.FC<PaymentOptionsProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#2a1333] to-[#1a0c20] rounded-lg shadow-lg p-6 sticky top-20 z-40">
+    <div className="bg-gradient-to-br from-[#2a1333] to-[#1a0c20] rounded-lg shadow-lg p-6">
       <h3 className="text-xl font-semibold mb-4 text-white">Opções de Pagamento</h3>
       
       <div className="mb-4">
