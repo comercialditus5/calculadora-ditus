@@ -3,7 +3,7 @@ import { X, Printer, Mail, Download, Send } from 'lucide-react';
 import { SelectedService, PaymentMethod, ClientInfo, RecurringPayment, TransportInfo } from '../types';
 import { calculateTotals, calculateFees, calculateInstallmentValue } from '../utils/calculations';
 import { getCategoryById } from '../data/servicesData';
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 
 interface BudgetDetailsProps {
   selectedServices: SelectedService[];
@@ -16,63 +16,356 @@ interface BudgetDetailsProps {
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    fontFamily: 'Helvetica'
+    padding: 0,
+    fontFamily: 'Helvetica',
+    backgroundColor: '#ffffff'
   },
   header: {
-    marginBottom: 20,
-    borderBottom: '1 solid #ccc',
-    paddingBottom: 10
+    backgroundColor: '#5C005C',
+    padding: 30,
+    marginBottom: 0
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  logo: {
+    width: 120,
+    height: 'auto'
+  },
+  headerText: {
+    textAlign: 'right'
   },
   title: {
-    fontSize: 20,
-    marginBottom: 10
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 4
   },
-  clientInfo: {
+  subtitle: {
+    fontSize: 14,
+    color: '#ffffff',
+    opacity: 0.9
+  },
+  content: {
+    padding: 30
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#5C005C',
+    marginBottom: 10,
+    marginTop: 20
+  },
+  clientSection: {
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 8,
     marginBottom: 20
   },
+  clientInfo: {
+    fontSize: 12,
+    marginBottom: 4,
+    color: '#333333'
+  },
+  serviceCategory: {
+    marginBottom: 15,
+    borderBottom: '1 solid #e9ecef',
+    paddingBottom: 10
+  },
+  categoryTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#5C005C',
+    marginBottom: 8
+  },
   service: {
-    marginBottom: 10
+    marginBottom: 8,
+    paddingLeft: 10
+  },
+  serviceName: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 2
+  },
+  servicePrice: {
+    fontSize: 11,
+    color: '#666666',
+    marginBottom: 1
+  },
+  serviceOptions: {
+    fontSize: 10,
+    color: '#888888',
+    fontStyle: 'italic',
+    marginTop: 2
   },
   totals: {
-    marginTop: 20,
-    borderTop: '1 solid #ccc',
-    paddingTop: 10
+    backgroundColor: '#5C005C',
+    padding: 20,
+    borderRadius: 8,
+    marginTop: 20
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8
+  },
+  totalLabel: {
+    fontSize: 12,
+    color: '#ffffff'
+  },
+  totalValue: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#ffffff'
+  },
+  finalTotal: {
+    borderTop: '1 solid rgba(255,255,255,0.3)',
+    paddingTop: 8,
+    marginTop: 8
+  },
+  finalTotalLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff'
+  },
+  finalTotalValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff'
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
+    borderTop: '1 solid #e9ecef',
+    paddingTop: 15
+  },
+  footerText: {
+    fontSize: 10,
+    color: '#666666',
+    textAlign: 'center',
+    marginBottom: 4
+  },
+  validityText: {
+    fontSize: 11,
+    color: '#5C005C',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  paymentInfo: {
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 8,
+    marginTop: 15
+  },
+  paymentTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#5C005C',
+    marginBottom: 8
+  },
+  paymentText: {
+    fontSize: 11,
+    color: '#333333',
+    marginBottom: 4
+  },
+  observations: {
+    backgroundColor: '#fff3cd',
+    padding: 15,
+    borderRadius: 8,
+    marginTop: 15,
+    borderLeft: '4 solid #ffc107'
+  },
+  observationTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#856404',
+    marginBottom: 8
+  },
+  observationText: {
+    fontSize: 10,
+    color: '#856404',
+    marginBottom: 4
   }
 });
 
-const BudgetPDF = ({ selectedServices, clientInfo, totals }: any) => (
+const BudgetPDF = ({ selectedServices, clientInfo, totals, paymentMethod, transport }: any) => (
   <Document>
     <Page size="A4" style={styles.page}>
+      {/* Header with brand colors */}
       <View style={styles.header}>
-        <Text style={styles.title}>Orçamento Ditus Marketing</Text>
-        <Text>Data: {new Date().toLocaleDateString('pt-BR')}</Text>
+        <View style={styles.headerContent}>
+          <View>
+            <Text style={styles.title}>Ditus Marketing</Text>
+            <Text style={styles.subtitle}>Orçamento Personalizado</Text>
+          </View>
+          <View style={styles.headerText}>
+            <Text style={styles.subtitle}>
+              Data: {new Date().toLocaleDateString('pt-BR')}
+            </Text>
+            <Text style={styles.subtitle}>
+              Válido até: {new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')}
+            </Text>
+          </View>
+        </View>
       </View>
       
-      <View style={styles.clientInfo}>
-        <Text>Negócio: {clientInfo.businessName}</Text>
-        <Text>Nome: {clientInfo.contactName}</Text>
-        <Text>WhatsApp: {clientInfo.whatsapp}</Text>
-      </View>
-      
-      {selectedServices.map((service: SelectedService, index: number) => (
-        <View key={index} style={styles.service}>
-          <Text>{service.name}</Text>
-          {service.prices.entry > 0 && (
-            <Text>Entrada: R$ {service.prices.entry.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</Text>
+      <View style={styles.content}>
+        {/* Client Information */}
+        {(clientInfo.businessName || clientInfo.contactName || clientInfo.whatsapp) && (
+          <View style={styles.clientSection}>
+            <Text style={styles.sectionTitle}>Informações do Cliente</Text>
+            {clientInfo.businessName && (
+              <Text style={styles.clientInfo}>Negócio: {clientInfo.businessName}</Text>
+            )}
+            {clientInfo.contactName && (
+              <Text style={styles.clientInfo}>Nome: {clientInfo.contactName}</Text>
+            )}
+            {clientInfo.whatsapp && (
+              <Text style={styles.clientInfo}>WhatsApp: {clientInfo.whatsapp}</Text>
+            )}
+          </View>
+        )}
+        
+        {/* Services by Category */}
+        <Text style={styles.sectionTitle}>Serviços Selecionados</Text>
+        
+        {Array.from(new Set(selectedServices.map((s: any) => s.category))).map((categoryId: string) => {
+          const categoryServices = selectedServices.filter((s: any) => s.category === categoryId);
+          const category = getCategoryById(categoryId);
+          
+          return (
+            <View key={categoryId} style={styles.serviceCategory}>
+              <Text style={styles.categoryTitle}>
+                {category?.name || categoryId}
+              </Text>
+              
+              {categoryServices.map((service: any, index: number) => (
+                <View key={index} style={styles.service}>
+                  <Text style={styles.serviceName}>{service.name}</Text>
+                  
+                  {service.prices.oneTime > 0 && (
+                    <Text style={styles.servicePrice}>
+                      Valor único: R$ {service.prices.oneTime.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    </Text>
+                  )}
+                  
+                  {service.prices.entry > 0 && (
+                    <Text style={styles.servicePrice}>
+                      Entrada: R$ {service.prices.entry.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    </Text>
+                  )}
+                  
+                  {service.prices.monthly > 0 && (
+                    <Text style={styles.servicePrice}>
+                      Mensal: R$ {service.prices.monthly.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    </Text>
+                  )}
+                  
+                  {Object.keys(service.options).length > 0 && (
+                    <Text style={styles.serviceOptions}>
+                      {Object.entries(service.options).map(([key, value]: [string, any]) => 
+                        `${key}: ${Array.isArray(value) ? value.join(', ') : value}`
+                      ).join(' | ')}
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
+          );
+        })}
+        
+        {/* Payment Information */}
+        <View style={styles.paymentInfo}>
+          <Text style={styles.paymentTitle}>Forma de Pagamento</Text>
+          <Text style={styles.paymentText}>
+            {paymentMethod.type === 'pix' ? (
+              "PIX (sem juros)"
+            ) : (
+              paymentMethod.installments === 1 
+                ? "Cartão de Crédito à vista" 
+                : `Cartão de Crédito em ${paymentMethod.installments}x`
+            )}
+          </Text>
+        </View>
+        
+        {/* Totals */}
+        <View style={styles.totals}>
+          <View style={styles.totalRow}>
+            <Text style={styles.totalLabel}>Total entrada:</Text>
+            <Text style={styles.totalValue}>
+              R$ {(totals.uniqueTotal + (transport?.cost * transport?.days || 0)).toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+            </Text>
+          </View>
+          
+          {totals.monthlyTotal > 0 && (
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>Total mensal:</Text>
+              <Text style={styles.totalValue}>
+                R$ {totals.monthlyTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+              </Text>
+            </View>
           )}
-          {service.prices.monthly > 0 && (
-            <Text>Mensal: R$ {service.prices.monthly.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</Text>
+          
+          {totals.paidTrafficTotal > 0 && (
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>Tráfego pago:</Text>
+              <Text style={styles.totalValue}>
+                R$ {totals.paidTrafficTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+              </Text>
+            </View>
           )}
-          {service.prices.oneTime > 0 && (
-            <Text>Único: R$ {service.prices.oneTime.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</Text>
+          
+          {transport?.cost > 0 && (
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>
+                Transporte ({transport.days} {transport.days === 1 ? 'dia' : 'dias'}):
+              </Text>
+              <Text style={styles.totalValue}>
+                R$ {(transport.cost * transport.days).toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+              </Text>
+            </View>
+          )}
+          
+          {paymentMethod.type === 'credit' && paymentMethod.installments > 1 && (
+            <View style={[styles.totalRow, styles.finalTotal]}>
+              <Text style={styles.finalTotalLabel}>
+                Parcelado em {paymentMethod.installments}x de:
+              </Text>
+              <Text style={styles.finalTotalValue}>
+                R$ {calculateInstallmentValue(totals.uniqueTotal + (transport?.cost * transport?.days || 0), paymentMethod.installments).toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+              </Text>
+            </View>
           )}
         </View>
-      ))}
+        
+        {/* Observations */}
+        <View style={styles.observations}>
+          <Text style={styles.observationTitle}>Observações Importantes</Text>
+          <Text style={styles.observationText}>• Orçamento válido por 10 dias</Text>
+          <Text style={styles.observationText}>• A entrada é paga no 1º mês; as mensalidades começam no 2º mês</Text>
+          <Text style={styles.observationText}>• Valores sujeitos a alteração conforme customizações solicitadas</Text>
+          <Text style={styles.observationText}>• Pagamentos mensais não têm acréscimo de juros</Text>
+        </View>
+      </View>
       
-      <View style={styles.totals}>
-        <Text>Total Entrada: R$ {totals.uniqueTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</Text>
-        <Text>Total Mensal: R$ {totals.monthlyTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</Text>
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          Ditus Marketing - Av. Paulista, 1636, sala 1504, São Paulo - SP, CEP 01310-200
+        </Text>
+        <Text style={styles.footerText}>
+          comercial@ditus.com.br | (11) 91470-2496
+        </Text>
+        <View style={{ marginTop: 8 }}>
+          <Text style={styles.validityText}>
+            Este orçamento é válido até {new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')}
+          </Text>
+        </View>
       </View>
     </Page>
   </Document>
@@ -198,7 +491,13 @@ export const BudgetDetails: React.FC<BudgetDetailsProps> = ({
             </a>
             
             <PDFDownloadLink
-              document={<BudgetPDF selectedServices={selectedServices} clientInfo={clientInfo} totals={totals} />}
+              document={<BudgetPDF 
+                selectedServices={selectedServices} 
+                clientInfo={clientInfo} 
+                totals={totals}
+                paymentMethod={paymentMethod}
+                transport={transport}
+              />}
               fileName="orcamento-ditus.pdf"
               className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
             >
